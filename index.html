@@ -565,7 +565,9 @@ function load(){
   try{wt=JSON.parse(localStorage.getItem(WK))||{}}catch{wt={}}
   try{cu=JSON.parse(localStorage.getItem(EK))||{}}catch{cu={}}
   try{pr=JSON.parse(localStorage.getItem(SK))||{}}catch{pr={}}
-  try{stk=parseInt(localStorage.getItem(STK))||0}catch{stk=0}
+try{stk=parseInt(localStorage.getItem(STK))||0}catch{stk=0}
+day=(new Date().getDay()+6)%7;
+
 }
 function save(){
   localStorage.setItem(WK,JSON.stringify(wt));
@@ -605,11 +607,16 @@ function render(){
   const p=prog(),st=p.map((_,i)=>dstat(p,i));
   const td=st.reduce((s,x)=>s+x.d,0),tt=st.reduce((s,x)=>s+x.t,0);
   const tpct=tt?Math.round(td/tt*100):0;
-  let cs=0;for(let i=p.length-1;i>=0;i--){if(st[i].d===st[i].t&&st[i].t>0)cs++;else break;}
-  if(cs!==stk){stk=cs;save();}
-
-  const dc=2*Math.PI*24, rc=2*Math.PI*21;
+ const dc=2*Math.PI*24, rc=2*Math.PI*21;
   const h=new Date().getHours();
+  const realDay=(new Date().getDay()+6)%7; // 0=пн, 1=вт, ..., 6=вс
+
+  let cs=0;
+  for(let i=realDay;i>=0;i--){
+    if(st[i].d===st[i].t&&st[i].t>0) cs++;
+    else break;
+  }
+  if(cs!==stk){stk=cs;save();}
   const gr=h<6?'ночная сессия':h<12?'доброе утро':h<18?'добрый день':'добрый вечер';
 
   let html=`
