@@ -609,8 +609,8 @@ function render(){
   const h=new Date().getHours();
   const realDay=(new Date().getDay()+6)%7; // 0=пн, 1=вт, ..., 6=вс
 
- let cs=0;
-  for(let i=realDay;i>=0;i--){
+let cs=0;const realDayForStreak=realDay;
+for(let i=realDayForStreak;i>=0;i--){
     if(st[i].d===st[i].t&&st[i].t>0) cs++;
     else break;
   }
@@ -734,7 +734,7 @@ function render(){
   </div>
   <footer>tracker · прогресс хранится локально</footer>`;
 
-  document.getElementById('app').innerHTML=html;
+  const _sc=document.querySelector('.dscroll');const _sp=_sc?_sc.scrollLeft:0;document.getElementById('app').innerHTML=html;requestAnimationFrame(()=>{const s=document.querySelector('.dscroll');if(s)s.scrollLeft=_sp;});
 
   /* events */
   document.querySelectorAll('.dp').forEach(el=>{
@@ -768,7 +768,7 @@ function render(){
   });
 
   document.querySelectorAll('.stval').forEach(inp=>{
-    inp.addEventListener('change',()=>{wt[inp.dataset.k]=inp.value.trim();save();});
+   inp.addEventListener('input',()=>{wt[inp.dataset.k]=inp.value.trim();save();});
   });
 
   document.getElementById('addB')?.addEventListener('click',()=>{form=true;hap();render();setTimeout(()=>document.getElementById('afn')?.focus(),80);});
